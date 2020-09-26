@@ -1,0 +1,96 @@
+#SHIP POSITION IN SPACE (to set)
+
+ship_position_phi # also make relative to moon 
+ship_position_theta
+ship_position_ro
+
+#SHIP VELOCITY 
+
+ship_velocity_phi = 0 # also make relative to moon 
+ship_velocityn_theta = 0 
+ship_velocityn_ro = 0
+
+#SHIP CONDITION INFO
+
+ship_first_stage_is_attached = true;
+ship_second_stage_is_attached = true;
+ship_third_stage_is_attached = true;
+linar_module_is_attached = true; # make pos vel and other attributes for lm
+
+#MOON POSITION IN SPACE (to set)
+
+moon_position_phi = ship_position_phi
+moon_position_theta = 0
+moon_position_ro
+
+#EARTH ROTATION
+
+earth_position_phi = 0
+
+#GENERAL DATA
+
+earth_radius = 6375000 # meteres 
+moon_radius = 1738000 # meteres 
+earth_g = 9,81 # m/s^2
+moon_g 1,62 # m/s^2
+moon_orbit_radius = 384405000 # meteres 
+
+#DATA ON SHIP'S PARTS CONDITION
+
+ship_first_stage_fuel_mass =
+ship_second_stage_fuel_mass =
+ship_third_stage_fuel_mass =
+linar_module_fuel_mass =
+linar_ship_fuel_mass =
+
+
+#FIRST STAGE 
+ship_first_stage_fuel_mass = 2010000 # kilograms
+ship_first_stage_mass = 135000 
+ship_first_stage_thrust = 34350000 # newtons
+ship_first_stage_combustion_product_flow_rate = 2580
+ship_first_stage_diameter = 10.1
+ship_first_stage_form_resistance_coefficient = 0.1
+
+#SECOND STAGE 
+ship_second_stage_fuel_mass = 421100 
+ship_second_stage_mass = 37600 
+ship_second_stage_thrust = 5115000 
+ship_second_stage_combustion_product_flow_rate = 4130 
+ship_second_stage_diameter = 10.1
+ship_second_stage_form_resistance_coefficient = 0.1
+
+#THIRD STAGE 
+ship_third_stage_fuel_mass = 108000
+ship_third_stage_mass = 12000
+ship_third_stage_thrust = 1016000
+ship_third_stage_combustion_product_flow_rate = 4130 
+ship_third_stage_diameter = 6.6 
+ship_third_stage_form_resistance_coefficient = 0.1
+
+#LUNAR SHIP
+
+#COMMAND MODULE
+lunar_ship_command_module_mass = 5500 
+diameter = 3.9
+
+#SERVICE MODULE
+lunar_ship_service_module_mass = 4800 
+lunar_ship_service_module_fuel_mass = 17700 
+lunar_ship_service_module_thrust = 95750
+lunar_ship_service_module_combustion_product_flow_rate = 3050 м/с.
+
+lunar_module_overall_mass = 15000 
+
+#LUNAR MODULE DESCENT STAGE
+lunar_module_descent_stage_mass = 2165 
+lunar_module_descent_stage_fuel_mass = 8165 
+lunar_module_descent_stage_maximum_thrust = 45040 #possibe to reduce
+lunar_module_descent_stage_combustion_product_flow_rate = 3050 
+
+#LUNAR MODULE ASCENT STAGE
+lunar_module_ascent_stage_mass = 2315 
+lunar_module_ascent_stage_fuel_mass = 2 355 
+lunar_module_ascent_stage_maximum_thrust = 15600 #possibe to reduce
+lunar_module_ascent_stage_combustion_product_flow_rate = 3050 
+lunar_module_ascent_stage_start_height = 2
