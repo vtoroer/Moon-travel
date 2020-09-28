@@ -17,8 +17,8 @@ def apply_gravity(gravitational_coefficient, moon_vehicle):
 
 # NOTE that vehicle orientation vector's module must be equal to zero
 # apply_thrust returns acceleration for a vehicle due to a thrust
-def apply_thrust(thrust, vehicle_orientation):
-    vector = vehicle_orientation.multiply(thrust)
+def apply_thrust(vehicle_mass, thrust, vehicle_orientation):
+    vector = vehicle_orientation.multiply(thrust / vehicle_mass)
     return vector
 
 
