@@ -22,10 +22,16 @@ class Vehicle:
     # TODO: MAKE A FUNCTION FOR A LUNAR MODULE DISCONNECTION AND CONNECTION
 
     # TODO: MAKE A FUNCTIONS FOR ROTATION AND THRUST
+    #def rotation(self, ):
+    
+    #def thrust(self, ):
+        #self.thrust = - V*fuel_burned_per_second
+        #return thrust 
+        
 
     # TODO: MAKE A CLASS OF ACTIVE_PARTS AND INCLUDE ALL CHARACTERISTICS SUCH AS:
     #  RAW MASS, FUEL MASS, FUEL BURNED PER SECOND (dm/dt = F/V, TO CALCULATE BASED ON THIS FORMULA)
     
-    # 12345
+
    
     
