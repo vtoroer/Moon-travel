@@ -6,4 +6,4 @@ class ActivePart:
     self.fuel_mass = fuel_mass
     self.thrust = thrust
     self.fuel_burned_per_second = thrust / specific_impelse
-    self.active_area = math.pi * diameter**2
+    self.active_area = math.pi * diameter**2 / 4
