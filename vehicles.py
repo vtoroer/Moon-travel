@@ -15,7 +15,7 @@ class Vehicle:
      def disconnection(self, separated_part):
         self.current_mass -= separated_part.current_mass + self.vehicle_fuel_left
         self.vehicle_fuel_left -= separated_part.vehicle_fuel_left
-#        self.thrust = active_part.thrust
+        self.thrust = active_part.thrust
 # внешние силы остаются те же, внутренние, видимо, отдельно считаются
         self.fuel_burned_per_second -= separated_part.fuel_burned_per_second
 
