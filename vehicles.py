@@ -13,7 +13,7 @@ class Vehicle:
         self.fuel_burned_per_second = fuel_burned_per_second
 
     def disconnection(self, separated_part, active_part):
-        self.current_mass -= active_part.raw_mass
+        self.current_mass -= active_part.raw_mass + self.vehicle_fuel_left
         self.vehicle_fuel_left = active_part.total_fuel
         self.thrust = active_part.thrust
         self.fuel_burned_per_second = active_part.fuel_burned_per_second
