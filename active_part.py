@@ -24,3 +24,5 @@ lunar_landing_stage = ActivePart(2165, 8165, 45.04, 3050, 0, 0)
 lunar_take_off_stage = ActivePart(2315, 2355, 15.6, 3050, 0, 0)
 
 #ЕСЛИ ЗНАЧЕНИЕ ПАРАМЕТРА РАВНО 0, ЗНАЧИТ ОН НЕ УКАЗАН В НАЧАЛЬНЫХ УСЛОВИЯХ
+
+time_per_step = 0.01
