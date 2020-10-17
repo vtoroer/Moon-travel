@@ -12,12 +12,13 @@ class Vehicle:
         self.thrust = thrust
         self.fuel_burned_per_second = fuel_burned_per_second
 
-     def disconnection(self, separated_part):
+
+    def disconnection(self, separated_part, active_part):
         self.current_mass -= separated_part.current_mass + self.vehicle_fuel_left
-        self.vehicle_fuel_left -= separated_part.vehicle_fuel_left
+        self.vehicle_fuel_left = active_part.total_fuel
         self.thrust = active_part.thrust
 # внешние силы остаются те же, внутренние, видимо, отдельно считаются
-        self.fuel_burned_per_second -= separated_part.fuel_burned_per_second
+        self.fuel_burned_per_second = active_part.fuel_burned_per_second
 
     def connecton(self, separated_part):
         self.current_mass += separated_part.current_mass
