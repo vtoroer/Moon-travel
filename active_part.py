@@ -1,7 +1,7 @@
 import math.pi
 
 class ActivePart:
-  def __init__(self, raw_mass, fuel_mass, thrust, specific_impulse, diameter, form_resistance)
+  def __init__(self, raw_mass, fuel_mass, thrust, specific_impulse, diameter, form_resistance):
     self.raw_mass = raw_mass
     self.fuel_mass = fuel_mass
     self.sum_mass = raw_mass+fuel_mass
