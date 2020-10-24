@@ -6,7 +6,14 @@ class Vector:
         """Constructor"""
         self.x = x
         self.y = y
-        self.phi = math.atan(y/x)
+        if x < 0:
+            self.phi = math.atan(y/x) + math.pi/2
+        elif (x == 0) and (y >= 0):
+            self.phi = math.pi/2
+        elif (x == 0) and (y < 0):
+            self.phi = -math.pi/2
+        else:
+            self.phi = math.atan(y/x)
         self.module = pow(x**2+y**2,0.5)
 
     def get_x(self):
