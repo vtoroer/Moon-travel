@@ -1,41 +1,81 @@
 from vector import *
 from force import *
+from active_part import *
 
 
 class Vehicle:
     def __init__(self, current_mass, vehicle_position_x, vehicle_position_y, vehicle_velocity_x, vehicle_velocity_y,
-                 vehicle_fuel_left, vehicle_orientation, thrust, fuel_burned_per_second):
+                 vehicle_fuel_left, vehicle_orientation, thrust, fuel_burned_per_second, active_area):
         """Constructor"""
         self.current_mass = current_mass
         self.vehicle_position_x = vehicle_position_x
         self.vehicle_position_y = vehicle_position_y
-        self.vehicle_velocity = Vector(0, 465)  # Стартовая скорость такая, потому что ракета вращается с Землей
+        self.vehicle_velocity = Vector(vehicle_velocity_x, vehicle_velocity_y)
         self.vehicle_fuel_left = vehicle_fuel_left
         self.vehicle_orientation = vehicle_orientation  # MODULE MUST BE EQUAL TO 1 (VECTOR)
         self.thrust = thrust
         self.fuel_burned_per_second = fuel_burned_per_second
+        self.current_acceleration = Vector(0, 0)  # Задаём вектор ускорения.
+        self.active_area = active_area
 
-    # Эта функция выполняет увеличение скорости при применении силы (thrust). 
-    def thrust(self, seconds_per_step):
-        self.vehicle_velocity.x += apply_thrust(self.thrust, self.vehicle_orientation, self.current_mass).x \
-                                   * seconds_per_step
-        self.vehicle_velocity.y += apply_thrust(self.thrust, self.vehicle_orientation, self.current_mass).y \
-                                   * seconds_per_step
+    def apply_forces(self, thrust_enabled, vehicle_mass):
+        self.vehicle_position_x += self.vehicle_velocity.x * time_per_step
+        self.vehicle_position_y += self.vehicle_velocity.y * time_per_step
+
+        sum_speed_gain_x = 0
+        sum_speed_gain_y = 0
+
+        earth_vehicle_position = Vector(earth_pos.x - self.vehicle_position_x, earth_pos.y - self.vehicle_position_y)
+        moon_vehicle_position = Vector(moon_pos.x - self.vehicle_position_x, moon_pos.y - self.vehicle_position_y)
+
+        if earth_vehicle_position.get_module() < earth_radius + 100000:  # ПРИМЕНЕНИЕ АЭРОДИНАМИЧЕСКОГО СОПРОТИВЛЕНИЯ
+            resistance_vector = apply_resistance(vehicle_mass,
+                                                 get_atmospheric_density(earth_vehicle_position.get_module() - earth_radius),
+                                                 0.1, self.active_area, self.vehicle_velocity)
+            sum_speed_gain_x += resistance_vector.x * time_per_step
+            sum_speed_gain_y += resistance_vector.y * time_per_step
+
+        if earth_vehicle_position.get_module() < moon_earth_radius // 10:  # ПРИМЕНЕНИЕ ГРАВИТАЦИИ ЗЕМЛИ
+            gravity_vector_x = apply_gravity(earth_mass, earth_vehicle_position).x * time_per_step
+            gravity_vector_y = apply_gravity(earth_mass, earth_vehicle_position).y * time_per_step
+            sum_speed_gain_x += gravity_vector_x
+            sum_speed_gain_y += gravity_vector_y
+
+        if moon_vehicle_position.get_module() < moon_earth_radius // 100:  # ПРИМЕНЕНИЕ ГРАВИТАЦИИ ЛУНЫ
+            gravity_vector_x = apply_gravity(moon_mass, moon_vehicle_position).x * time_per_step
+            gravity_vector_y = apply_gravity(moon_mass, moon_vehicle_position).y * time_per_step
+            sum_speed_gain_x += gravity_vector_x
+            sum_speed_gain_y += gravity_vector_y
+
+        if thrust_enabled:
+            thrust_vector_x = apply_thrust(self.thrust, self.vehicle_orientation, self.current_mass).x * time_per_step
+            thrust_vector_y = apply_thrust(self.thrust, self.vehicle_orientation, self.current_mass).y * time_per_step
+            sum_speed_gain_x += thrust_vector_x
+            sum_speed_gain_y += thrust_vector_y
+
+        self.current_acceleration.update_by_xy(sum_speed_gain_x / time_per_step, sum_speed_gain_y / time_per_step)
+
+        self.vehicle_velocity.update_by_xy(self.vehicle_velocity.x + sum_speed_gain_x, self.vehicle_velocity.y
+                                           + sum_speed_gain_y)
+        self.vehicle_fuel_left -= self.fuel_burned_per_second * time_per_step
+
         return 0
 
-    # Эта функция выполняет поворот экзмепляра. Если поворот до заданного угла невозможен (слишком большие перегрузки), 
+    # Эта функция выполняет поворот экзмепляра. Если поворот до заданного угла невозможен (слишком большие перегрузки),
     # она выполняет поворот на максимально большой угол (стремясь достичь целевого) и возвращает код 1. Если же поворот
     # возможен, она выполняет поворот и возвращает код 0.
-    def rotation(self, max_angular_velocity, goal_angle, seconds_per_step):
-        max_possible_rotation = max_angular_velocity * seconds_per_step
+    def rotation(self, max_angular_velocity, goal_angle):
+        max_possible_rotation = max_angular_velocity * time_per_step
         if goal_angle - self.vehicle_orientation.phi >= max_possible_rotation:
-            self.vehicle_orientation.phi += max_possible_rotation
+            self.vehicle_orientation.update_by_phi_and_module(self.vehicle_orientation.phi + max_possible_rotation,
+                                                              self.vehicle_orientation.module)
             return 1
         elif goal_angle - self.vehicle_orientation.phi <= max_possible_rotation:
-            self.vehicle_orientation.phi -= max_possible_rotation
+            self.vehicle_orientation.update_by_phi_and_module(self.vehicle_orientation.phi - max_possible_rotation,
+                                                              self.vehicle_orientation.module)
             return 1
         else:
-            self.vehicle_orientation.phi = goal_angle
+            self.vehicle_orientation.update_by_phi_and_module(goal_angle, self.vehicle_orientation.module)
             return 0
 
     def disconnection(self, separated_part, active_part):
@@ -71,4 +111,3 @@ class Vehicle:
         first.connecton(second)
         second = None
         return 0
-

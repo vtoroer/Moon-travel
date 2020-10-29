@@ -1,12 +1,13 @@
 # В этом файле указаны функции для работы с данными
 import numpy as np
 import matplotlib.pyplot as plt
+from active_part import *
 
 
 # ЭТА ФУНКЦИЯ СОЗДАЁТ ОДИН ГРАФИК
 def plot(steps, file_name, plot_name, variable):
 
-    file = open(file_name, 'r')
+    file = file_name  # open(file_name, 'r')
 
     data = np.zeros(shape=steps)
 
@@ -20,13 +21,13 @@ def plot(steps, file_name, plot_name, variable):
     ax.grid()
 
     #  Добавляем подписи к осям и название графика:
-    ax.set_xlabel('time (s)')
+    ax.set_xlabel('time (' + str(time_per_step) + ' s)')
     ax.set_ylabel(variable)
     plt.title(plot_name)
 
     # plt.show()
 
-    f.savefig("speed_over_time.pdf", bbox_inches='tight')
+    f.savefig(plot_name, bbox_inches='tight')
     return 0
 
 
