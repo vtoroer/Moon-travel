@@ -13,7 +13,7 @@ class ActivePart:
 
 # [raw_mass] = kg
 # [fuel_mass] = kg
-# [thrust] = kN
+# [thrust] = N
 # [specific_impulse] = m/s
 # [diameter] = m
 # [form_resistance] = -
@@ -22,7 +22,7 @@ class ActivePart:
 first_rocket_stage = ActivePart(135000, 2010000, 34350000, 2580, 10.1, 0.1)
 second_rocket_stage = ActivePart(37600, 421100, 5115000, 4130, 10.1, 0.1)
 third_rocket_stage = ActivePart(12000, 108000, 1016000, 4130, 6.6, 0.1)
-lunar_ship = ActivePart(10300, 17700, 95.75, 3050000, 3.9, 0)
+lunar_ship = ActivePart(10300, 17700, 95750, 3050000, 3.9, 0)
 lunar_landing_stage = ActivePart(2165, 8165, 45040, 3050, 0, 0)
 lunar_take_off_stage = ActivePart(2315, 2355, 15600, 3050, 0, 0)
 
