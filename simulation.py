@@ -7,7 +7,8 @@ import arcade
 THRUST_ENABLED = False
 SCREEN_WIDTH = 1480
 SCREEN_HEIGHT = 800
-FACTOR = 1.5 * 10**(-6)
+FACTOR = 5 * 10**(-6)
+
 
 class MyGame(arcade.Window):
     """ Main application class. """
@@ -25,7 +26,7 @@ class MyGame(arcade.Window):
 
         super().__init__(width, height)
         global rocket_one
-        rocket_one = Vehicle(sum_mass, 6371000 + 90000, 0, 0, 1*7300, first_rocket_stage.fuel_mass, Vector(1, 0),
+        rocket_one = Vehicle(sum_mass, 6371000 + 100000, 0, 0, 1.2*7910, first_rocket_stage.fuel_mass, Vector(1, 0),
                              first_rocket_stage.thrust, first_rocket_stage.fuel_burned_per_second,
                              first_rocket_stage.active_area)
         self.total_sim_steps = 0
@@ -117,6 +118,14 @@ class MyGame(arcade.Window):
             self.f_rocket_acceleration.close()
             exit()
         """ All the logic to move, and the game logic goes here. """
+
+    def on_key_press(self, key, modifiers):
+        """ Called whenever the user presses a key. """
+        global FACTOR
+        if key == arcade.key.UP:
+            FACTOR += 10**(-6)
+        elif key == arcade.key.DOWN:
+            FACTOR -= 5 * 10**(-7)
 
 
 def run_simulation():

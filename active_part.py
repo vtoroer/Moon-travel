@@ -40,7 +40,7 @@ moon_angular_velocity = 16 * 10**(-5)
 
 # ЕСЛИ ЗНАЧЕНИЕ ПАРАМЕТРА РАВНО 0, ЗНАЧИТ, ОН НЕ УКАЗАН В НАЧАЛЬНЫХ УСЛОВИЯХ
 
-time_per_step = 10
+time_per_step = 100
 
 
 def update_moon_pos():
