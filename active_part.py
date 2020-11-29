@@ -26,6 +26,8 @@ lunar_ship = ActivePart(10300, 17700, 95750, 3050000, 3.9, 0)
 lunar_landing_stage = ActivePart(2165, 8165, 45040, 3050, 0, 0)
 lunar_take_off_stage = ActivePart(2315, 2355, 15600, 3050, 0, 0)
 
+# ЕСЛИ ЗНАЧЕНИЕ ПАРАМЕТРА РАВНО 0, ЗНАЧИТ, ОН НЕ УКАЗАН В НАЧАЛЬНЫХ УСЛОВИЯХ
+
 sum_mass = 334380  # Суммарная масса модулей
 
 gravitational_constant = 6.674 * 10**(-11)
@@ -37,8 +39,6 @@ earth_pos = Vector(0, 0)
 moon_pos = Vector(384400000, 0)
 moon_earth_radius = 384400000
 moon_angular_velocity = 16 * 10**(-5)
-
-# ЕСЛИ ЗНАЧЕНИЕ ПАРАМЕТРА РАВНО 0, ЗНАЧИТ, ОН НЕ УКАЗАН В НАЧАЛЬНЫХ УСЛОВИЯХ
 
 time_per_step = 100
 
