@@ -1,4 +1,5 @@
-from math import *
+import math
+
 
 class Vector:
 
@@ -6,6 +7,15 @@ class Vector:
         """Constructor"""
         self.x = x
         self.y = y
+        self.module = pow(x ** 2 + y ** 2, 0.5)
+        if x > 0:
+            self.phi = math.atan(y / x)
+        elif x < 0:
+            self.phi = math.atan(y / x) + math.pi
+        elif y > 0:
+            self.phi = math.pi / 2
+        else:
+            self.phi = - math.phi / 2
 
     def get_x(self):
         return self.x
@@ -13,11 +23,33 @@ class Vector:
     def get_y(self):
         return self.y
 
-    def multiply(self, factor):
-        self.x *= factor
-        self.y *= factor
-        return
+    def get_phi(self):
+        return self.phi
 
-    def module(self):
-        mod = pow(pow(self.x, 2) + pow(self.x, 2), 0.5)
-        return mod
+    def get_module(self):
+        return self.module
+
+    def update_by_xy(self, x, y):
+        self.x = x
+        self.y = y
+        if x > 0:
+            self.phi = math.atan(y / x)
+        elif x < 0:
+            self.phi = math.atan(y / x) + math.pi
+        elif y > 0:
+            self.phi = math.pi / 2
+        else:
+            self.phi = - math.phi / 2
+        self.module = pow(x ** 2 + y ** 2, 0.5)
+        return self
+
+    def update_by_phi_and_module(self, phi, module):
+        self.x = module * math.cos(phi)
+        self.y = module * math.sin(phi)
+        self.phi = phi
+        self.module = module
+        return self
+
+    def multiply(self, factor):
+        self.update_by_phi_and_module(self.phi, self.module * factor)
+        return self
