@@ -30,15 +30,23 @@ lunar_take_off_stage = ActivePart(2315, 2355, 15600, 3050, 0, 0)
 
 sum_mass = 334380  # Суммарная масса модулей
 
+# [gravitational_constant] = N*m^2/kg^2
+# [moon_mass] = kg
+# [earth_mass] = kg
+# [moon_radius] = m
+# [earth_radius] = m
+# [moon_earth_radius] = m
+# [moon_angular_velocity] = rad/s
+
 gravitational_constant = 6.674 * 10**(-11)
 moon_mass = 7.3477 * 10**22
 earth_mass = 5.9722 * 10**24
 moon_radius = 1737100
 earth_radius = 6378100
+moon_earth_radius = 384405000
+moon_angular_velocity = 2,66 * 10**(-6)
+moon_pos = Vector(moon_earth_radius, 0)
 earth_pos = Vector(0, 0)
-moon_pos = Vector(384400000, 0)
-moon_earth_radius = 384400000
-moon_angular_velocity = 16 * 10**(-5)
 
 time_per_step = 100
 
