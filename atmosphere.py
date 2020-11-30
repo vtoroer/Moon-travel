@@ -1,60 +1,13 @@
-def get_atmospheric_density(height):
+h = [0, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 14000, 16000, 180000, 20000, 24000, 28000, 32000, 36000, 40000, 50000, 60000, 80000, 100000, 150000, 200000
 
-    if height <= 500:
-        return 1.2250
-    elif height <= 1000:
-        return 1.1673
-    elif height <= 1500:
-        return 1.1117
-    elif height <= 2000:
-        return 1.0581
-    elif height <= 2500:
-        return 1.0065
-    elif height <= 3000:
-        return 0.9569
-    elif height <= 4000:
-        return 0.9093
-    elif height <= 5000:
-        return 0.8194
-    elif height <= 6000:
-        return 0.7365
-    elif height <= 7000:
-        return 0.6601
-    elif height <= 8000:
-        return 0.59
-    elif height <= 9000:
-        return 0.5258
-    elif height <= 10000:
-        return 0.4671
-    elif height <= 11000:
-        return 0.4135
-    elif height <= 12000:
-        return 0.3648
-    elif height <= 14000:
-        return 0.3119
-    elif height <= 16000:
-        return 0.2279
-    elif height <= 18000:
-        return 0.1665
-    elif height <= 20000:
-        return 0.1216
-    elif height <= 24000:
-        return 0.0889
-    elif height <= 28000:
-        return 0.0469
-    elif height <= 32000:
-        return 0.0251
-    elif height <= 36000:
-        return 0.0136
-    elif height <= 40000:
-        return 7.26 * 10**(-3)
-    elif height <= 50000:
-        return 4.00 * 10**(-3)
-    elif height <= 60000:
-        return 1.03 * 10**(-3)
-    elif height <= 80000:
-        return 3.00 * 10**(-4)
-    elif height <= 100000:
-        return 1.85 * 10**(-5)
-    else:
+p = [1.225, 1.1673, 1.1117, 1.0581, 1.0065, 0.9569, 0.9093, 0.8194, 0.7365, 0.6601, 0.59, 0.5258, 0.4671, 0.4135, 0.3648, 0.3119, 0.2279, 0.1665, 0.1216, 0.0889, 0.0469, 0.0251, 0.0136, 7.26 * 10**(-3), 4 * 10**(-3), 1.03 * 10**(-3), 3 * 10**(-4), 1.85 * 10**(-5), 5.55 * 10**(-7), 2 * 10**(-9), 2.52 * 10**(-10)]
+     
+def get_atmospheric_density(height):
+     
+    if height >= 200000:
         return 0
+    else:
+        i = 0
+        while height >= h[i]:
+            i +=1
+        return p[i-1] + (p[i] - p[i-1]) / (h[i] - h[i-1]) * (height - h[i-1])
