@@ -66,48 +66,57 @@ class Vehicle:
     # возможен, она выполняет поворот и возвращает код 0.
     def rotation(self, max_angular_velocity, goal_angle):
         max_possible_rotation = max_angular_velocity * time_per_step
-        if goal_angle - self.vehicle_orientation.phi >= max_possible_rotation:
+        # область определения угла должна быть (-pi/2, 3*pi/2), смотри Vectors
+        between_goal_and_pos = goal_angle - self.vehicle_orientation.phi
+        while abs(between_goal_and_pos) >= 2*math.pi:
+            if between_goal_and_pos < -math.pi*2:
+                between_goal_and_pos += math.pi*2
+            elif between_goal_and_pos > math.pi*2:
+                between_goal_and_pos -= math.pi*2
+    
+        if abs(between_goal_and_pos) <= max_possible_rotation:
+            self.vehicle_orientation.update_by_phi_and_module(goal_angle, self.vehicle_orientation.module)
+            return 0
+        elif (abs(between_goal_and_pos) > max_possible_rotation) and (goal_angle >= self.vehicle_orientation.phi):
             self.vehicle_orientation.update_by_phi_and_module(self.vehicle_orientation.phi + max_possible_rotation,
                                                               self.vehicle_orientation.module)
             return 1
-        elif goal_angle - self.vehicle_orientation.phi <= max_possible_rotation:
-            self.vehicle_orientation.update_by_phi_and_module(self.vehicle_orientation.phi - max_possible_rotation,
+        else:
+            self.vehicle_orientation.update_by_phi_and_module(self.vehicle_orientation.phi - max_possible_rotation, 
                                                               self.vehicle_orientation.module)
             return 1
-        else:
-            self.vehicle_orientation.update_by_phi_and_module(goal_angle, self.vehicle_orientation.module)
-            return 0
 
     def disconnection(self, separated_part, active_part):
         self.current_mass -= separated_part.current_mass + self.vehicle_fuel_left
         self.vehicle_fuel_left = active_part.total_fuel
         self.thrust = active_part.thrust
-        # внешние силы остаются те же, внутренние, видимо, отдельно считаются
         self.fuel_burned_per_second = active_part.fuel_burned_per_second
 
     def connection(self, separated_part):
         self.current_mass += separated_part.current_mass
         self.vehicle_fuel_left += separated_part.total_fuel
-        # self.thrust = active_part.thrust + separated_part.thrust
         self.fuel_burned_per_second += separated_part.fuel_burned_per_second
         # считаем, что относительная скорость мала
 
-    # TODO: MAKE A FUNCTIONS FOR ROTATION AND THRUST
-
     # FUEL BURNED PER SECOND (dm/dt = F/V, TO CALCULATE BASED ON THIS FORMULA)
 
-    def disconnect(self, main_part, sp_current_mass, sp_vehicle_fuel_left, sp_fuel_burned_per_second):
-        # вся ракета, сухая масса ЛМ, топливо ЛМ, кол-во топлива, сжигаемого ЛМ
-        # остальное не меняется
-        # то, что начинается с sp относится к separated part
-        lunar_module = Vehicle(sp_current_mass, main_part.vehicle_position_x,
-                               main_part.vehicle_position_y, main_part.vehicle_velocity_x, main_part.vehicle_velocity_y,
-                               sp_vehicle_fuel_left, main_part.vehicle_orientation, main_part.thrust,
-                               sp_fuel_burned_per_second)
-        main_part.disconnection(lunar_module)
-        return 0
+def disconnect_lsh(main_part):
+# тот самый экземпляр класса, который будем дрючить
+# т.к. используем функцию только однажды, используем здесь ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ!!!!
+# НЕЛЬЗЯ УБИРАТЬ ИМПОРТ active_part
+# lsh в конце названия функции означает lunar_ship
+    sp_current_mass = ap.lunar_landing_stage.raw_mass + ap.lunar_landing_stage.fuel_mass \
+                      + ap.lunar_take_off_stage.raw_mass + ap.lunar_take_off_stage.fuel_mass \
+                      + 5500
+    # топливо и сухая масса посадочного и взлётного модуля + масса командного отсека
+    lunar_module = Vehicle(sp_current_mass, main_part.vehicle_position_x,
+                           main_part.vehicle_position_y, main_part.vehicle_velocity_x, main_part.vehicle_velocity_y,
+                           ap.lunar_landing_stage.fuel_mass, main_part.vehicle_orientation, ap.lunar_landing_stage.thrust,
+                           ap.lunar_landing_stage.fuel_burned_per_second)
+    main_part.disconnection(lunar_module)
+    return 0
 
-    def connect(self, first, second):
-        first.connecton(second)
-        second = None
-        return 0
+def connect(self, first, second):
+    first.connecton(second)
+    second = None
+    return 0
