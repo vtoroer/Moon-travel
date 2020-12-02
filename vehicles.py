@@ -57,7 +57,9 @@ class Vehicle:
 
         self.vehicle_velocity.update_by_xy(self.vehicle_velocity.x + sum_speed_gain_x, self.vehicle_velocity.y
                                            + sum_speed_gain_y)
-        self.vehicle_fuel_left -= self.fuel_burned_per_second * time_per_step
+        if thrust_enabled:
+            self.vehicle_fuel_left -= self.fuel_burned_per_second * time_per_step
+            self.current_mass -= self.fuel_burned_per_second * time_per_step
 
         return 0
 
