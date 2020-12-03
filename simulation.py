@@ -95,8 +95,55 @@ class MyGame(arcade.Window):
         self.f_rocket_acceleration.write(str(rocket_one.current_acceleration.get_module()) + '\n')
         self.f_rocket_acceleration.close()
 
-        if (rocket_one.vehicle_position_x**2 + rocket_one.vehicle_position_y**2)**(0.5) <= earth_radius:
-            print("CRASH!")
+        # LANDING
+
+        lngth = (rocket_one.vehicle_position_x ** 2 + rocket_one.vehicle_position_y ** 2) ** 0.5
+        if earth_radius + 3000 < lngth < earth_radius + 10000 and rocket_one.vehicle_velocity.get_module() < 300:
+            print("Landing was a success!")
+
+            self.f_rocket_velocity = open('data_files/rocket_velocity.txt', 'r')
+            plot(self.total_sim_steps, self.f_rocket_velocity, "velocity over time", "velocity")
+            self.f_rocket_velocity.close()
+
+            self.f_rocket_distance_to_the_earth = open('data_files/rocket_distance_to_the_earth.txt', 'r')
+            plot(self.total_sim_steps, self.f_rocket_distance_to_the_earth, "distance to earth's surface over time",
+                 "distance")
+            self.f_rocket_distance_to_the_earth.close()
+
+            self.f_rocket_distance_to_the_moon = open('data_files/rocket_distance_to_the_moon.txt', 'r')
+            plot(self.total_sim_steps, self.f_rocket_distance_to_the_moon, "distance to moon's surface over time",
+                 "distance")
+            self.f_rocket_distance_to_the_moon.close()
+
+            self.f_rocket_acceleration = open('data_files/rocket_acceleration.txt', 'r')
+            plot(self.total_sim_steps, self.f_rocket_acceleration, "acceleration over time",
+                 "acceleration")
+            self.f_rocket_acceleration.close()
+            exit()
+        elif (rocket_one.vehicle_position_x**2 + rocket_one.vehicle_position_y**2) ** 0.5 <= earth_radius:
+            print("Crash!")
+
+            self.f_rocket_velocity = open('data_files/rocket_velocity.txt', 'r')
+            plot(self.total_sim_steps, self.f_rocket_velocity, "velocity over time", "velocity")
+            self.f_rocket_velocity.close()
+
+            self.f_rocket_distance_to_the_earth = open('data_files/rocket_distance_to_the_earth.txt', 'r')
+            plot(self.total_sim_steps, self.f_rocket_distance_to_the_earth, "distance to earth's surface over time",
+                 "distance")
+            self.f_rocket_distance_to_the_earth.close()
+
+            self.f_rocket_distance_to_the_moon = open('data_files/rocket_distance_to_the_moon.txt', 'r')
+            plot(self.total_sim_steps, self.f_rocket_distance_to_the_moon, "distance to moon's surface over time",
+                 "distance")
+            self.f_rocket_distance_to_the_moon.close()
+
+            self.f_rocket_acceleration = open('data_files/rocket_acceleration.txt', 'r')
+            plot(self.total_sim_steps, self.f_rocket_acceleration, "acceleration over time",
+                 "acceleration")
+            self.f_rocket_acceleration.close()
+            exit()
+        elif rocket_one.current_acceleration.get_module() > 98.1:
+            print("Crew is dead")
 
             self.f_rocket_velocity = open('data_files/rocket_velocity.txt', 'r')
             plot(self.total_sim_steps, self.f_rocket_velocity, "velocity over time", "velocity")
