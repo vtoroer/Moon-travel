@@ -58,19 +58,100 @@ def find_orbit(ship, moon_acceleration, phi_moon_aim):
         return 0
     else: return 1
 
-def waiting (ship_up, ship_moon, current_time, slope_speed_moon, moon_radius):
-    # находим необходимые константы
-    
-    angle_moon = slope_speed_moon*time_left
-    ship_moon.vechile_orientation += angle_moon
-    angle_2_2 = angle_moon + ship_moon.vechile_velocity.get_phi()
-    ship_moon.vechile_velocity.update_by_phi_and_module(angle_2_2, ship_moon.vechile_velocity.get_module())
-    radius_vector_2 = Vector(ship_moon.vechile_position_x, ship_moon.vechile_position_y)
-    angle_moon += radius_vector.get_phi()
-    radius_vector_2.update_by_phi_and_module(angle_moon, moon_radius)
-    ship_moon.vechile_orientation_x = radius_vector.get_x
-    ship_moon.vechile_orientation_y = radius_vector.get_y
-    radius_vector_2 = none
-    # обновляем информацию о части, сидящей на Луне
-    return current_time += time_gone 
-    
+# в случае успеха выводится 0
+def find_orbit(ship, moon_acceleration, phi_moon_aim, moon_angular_velocity):
+    radius_vector = Vector(ship.vehicle_position_x, ship.vehicle_position_y)
+    aim_vector = Vector(moon_radius*math.cos(phi_moon_aim), moon_radius*math.sin(phi_moon_aim))
+    # вводим радиус-вектор, с началом в центре Луны и концом на ракете
+    moon_surf_dist = radius_vector.get_module() - moon_radius
+    # с помощью формул из интернета считаем сколько времени будем падать при нулевой норм скорости
+    # и сколько времени нужно, чтобы сбросить тангенцальную скорость до 0
+    delta_v = math.sqrt(2*moon_acceleration*moon_surf_dist)
+    delta_t = ship.current_mass*3050/ship.thrust*(1-math.exp(-delta_v/3050))
+    angle_speed_tang = math.pi/2 - radius_vector.get_phi
+    tang_speed = (abs(ship.vehicle_velocity.get_module()*math.cos(angle_speed_tang)) - 
+                  moon_angular_velocity*radius_vector.get_module())
+    delta_tau = tang_speed * ship.current_mass / ship.thrust
+    aim_vector.update_by_phi_and_module(aim_vector.get_phi() + moon_angular_velocity*
+                                        (delta_t + delta_tau), moon_radius)
+    # посчитаем расстояние до цели с запасом в отрицательную сторону 
+    angle_aim_fall = aim_vector.get_phi() - radius_vector.get_phi()
+    if abs(angle_aim_fall) >= (2*math.pi):
+        if angle_aim_fall < -math.pi*2:
+            angle_aim_fall += math.pi*2
+        elif angle_aim_fall > math.pi*2:
+            angle_aim_fall -= math.pi*2
+    distance_aim_fall = moon_radius*angle_aim_fall
+    radius_vector = None
+    if (distance_aim_fall <= 100) and (distance_aim_fall >= 0):
+        return 0
+    else: return 1
+
+def moon_landing(ship, moon_radius, moon_angular_velocity):
+    radius_vector = Vetor(ship.vehicle_position_x, ship.vehicle_position_y)
+    height = radius_vector.get_module() - moon_radius
+    moon_acceleration = gravitational_constant * moon_mass / moon_radius**2
+    # полностью гасим нормальную скорость, помним, что угловая скорость должна остаться
+    tang_speed = (abs(ship.vehicle_velocity.get_module()*math.cos(angle_speed_tang)) - 
+                  moon_angular_velocity*radius_vector.get_module())
+    goal_angle = radius_vector.get_phi() + math.pi/2
+    if (goal_angle) >= (2*math.pi):
+        if goal_angle < -math.pi*2:
+            goal_angle += math.pi*2
+        elif goal_angle > math.pi*2:
+            goal_angle -= math.pi*2
+    if (tang_speed >= 0.5) and (height >= 10000):
+        ship.rotation(0.05555555, goal_angle)
+        return True
+    # вычисляем delta-v, смотрим, когда надо начинать тормозить
+    speed_reduce = lunar_ship.specific_impulse * math.log(ship.current_mass /
+                   lunar_ship.raw_mass)
+    moment_inerce = lunar_module.raw_mass() * moon_radius**2
+    energy_sh_rotation = moment_inerce*moon_angular_velocity**2 / 2
+    speed_is_going_be = math.sqrt(2*height*moon_acceleration + 
+                                  ship.vehicle_velocity.get_module() ** 2 
+                                  - energy_sh_rotation/lunar_module.raw_mass())
+    angle_bw_velocity_rv = ((radius_vector.get_x()*ship.vehicle_velocity.get_x +
+                             radius_vector.get_y()*ship.vehicle_velocity.get_y)/
+                             (radius_vector.get_module()*ship.vehicle_velocity.get_module()))
+    radius_vector = None
+    if (speed_is_going_be >= speed_reduce) and (height >= 50) and (angle_bw_velocity_rv < 0):
+        # момент, когда надо начинать тормозить, найден
+        ship = turn_against_speed(ship)
+        return True, False
+    # если высота меньше 50 метров, используем аккуратную настройку
+    elif (height >= 50):
+        return False, False
+    elif (height < 50) and (speed_is_going_be >= speed_reduce) and (angle_bw_velocity_rv < 0):
+        if (height>0): 
+            ship = turn_against_speed(ship)
+            return True, False
+        else:
+            return False, True
+    elif (height < 50) and (angle_bw_velocity_rv >= 0):
+        if (height>0):
+            return False, False
+        else:
+            return False, True
+    elif (height < 50) and (speed_is_going_be < speed_reduce) and (angle_bw_velocity_rv < 0):
+        if (height>0):
+            return False, False
+        else: 
+            return False, True
+
+# обновляет положение коробля, считает время и понимает, пора ли уже взлетать
+# вывод - корабль в небе, кор. на луне, прошло времени, пора ли взлетать
+def waiting(ship_moon, ship_orbit, time_step, moon_angular_velocity, time_waited):
+    # rv - радиус-вектор
+    rv_moon = Vector(ship_moon.vehicle_position_x, ship_moon.vehicle_position_y)
+    rv_moon.update_by_phi_and_module(time_step*moon_angular_velocity, 
+                                     rv_moon.get_module())
+    ship_moon.vehicle_position_x = rv_moon.get_x()
+    ship_moon.vehicle_position_y = rv_moon.get_y()
+    ship_orbit.apply_forces(False, ship_orbit.current_mass)
+    time_waited += time_step
+    if (time_waited == 3600) and nearest_orbit: 
+        is_ready = True
+    else:
+        is_ready = False
+    return ship_moon, ship_orbit, time_waited, is_ready
