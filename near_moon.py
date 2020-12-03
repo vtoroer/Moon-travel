@@ -1,5 +1,6 @@
 import vector as vt
 import vechiles
+import active_part
 import numpy as np
 import math
 
@@ -155,3 +156,29 @@ def waiting(ship_moon, ship_orbit, time_step, moon_angular_velocity, time_waited
     else:
         is_ready = False
     return ship_moon, ship_orbit, time_waited, is_ready
+
+def actions_near_moon(THRUST_ENABLED, ARE_DISCONNECTED, TIME_TO_FALL, IS_LANDED_MOON, 
+                      READY_TAKEOFF_MOON, TIME_ON_MOON, READY_CONNECTING, rocket_one)
+    if ARE_DISCONNECTED == False: 
+            rocket_two = disconnect_lsh(rocket_one)
+            # rocket__two - это лунный модуль, далее управляем им
+            ARE_DISCONNECTED = True
+        if TIME_TO_FALL == 1: 
+            THRUST_ENABLED = get_lower_to_moon(rocket_two)
+                if THRUST_ENABLED == False:
+                    TIME_TO_FALL = find_orbit(rocket_two, gravitational_constant*moon_mass / 
+                                   math.sqrt((rocket_two.vehicle_position_x) ** 2 + (rocket_two.vehicle_position_y) ** 2), 
+                                   moon_aim_position.get_phi())
+        elif TIME_TO_FALL == 0:
+                THRUST_ENABLED, IS_LANDED_MOON = moon_landing(rocket_two, moon_radius, moon_angular_velocity)
+                if IS_LANDED_MOON:
+                    rocket_two, rocket_one, TIME_ON_MOON, READY_TAKEOFF_MOON = waiting(rocket_two, 
+                                                    rocket_one, time_per_step, moon_angular_velocity, TIME_ON_MOON)
+
+        rocket_one.apply_forces(False, rocket_one.current_mass)
+        rocket_two.apply_forces(THRUST_ENABLED, rocket_two.current_mass)
+        update_moon_pos()
+        if READY_CONNECTING == True:
+            rocket_two = connect(rocket_two, rocket_two)
+            ARE_DISCONNECTED = False
+    return NUMBER_OF_PHASE += 1
